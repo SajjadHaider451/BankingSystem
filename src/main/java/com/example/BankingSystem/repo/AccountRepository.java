@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.BankingSystem.Entity.Account;
 
+/*
+ * Fetch accounts, find accounts by owner, search by account number
+ */
+
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 

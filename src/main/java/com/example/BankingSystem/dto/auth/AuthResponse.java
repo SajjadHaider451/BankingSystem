@@ -1,5 +1,6 @@
 package com.example.BankingSystem.dto.auth;
 
+
 public class AuthResponse {
 
     private String token;
@@ -18,4 +19,6 @@ public class AuthResponse {
     public void setToken(String token) {
         this.token = token;
     }
+    
+    
 }

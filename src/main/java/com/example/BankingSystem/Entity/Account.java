@@ -58,11 +58,17 @@ public class Account {
 		this.createdAt = createdAt;
 	}
 	
+	public Users getUser() {
+	    return user;
+	}
+
+	public void setUser(Users user) {
+	    this.user = user;
+	}
+	
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", accountNumber=" + accountNumber + ", balance=" + balance + ", accountType="
 				+ accountType + ", createdAt=" + createdAt + "]";
 	}
-	
-	
 }

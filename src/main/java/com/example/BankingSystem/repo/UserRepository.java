@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.BankingSystem.Entity.Users;
 
+/*
+ * finds users, saves users, check duplicate emails
+ */
+
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
 

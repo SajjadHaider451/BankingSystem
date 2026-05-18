@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.BankingSystem.Entity.Transaction;
 
+/*
+ * store transaction history, fetch transfers, fetch withdrawals/deposits
+ */
+
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 

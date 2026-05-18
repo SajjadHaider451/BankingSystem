@@ -70,6 +70,22 @@ public class Transaction {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public void setReceiverAccount(Account recieverAccount) {
+		this.receiverAccount = recieverAccount;
+	}
+	
+	public Account getReceiverAccount() {
+		return receiverAccount;
+	}
+	
+	public void setSenderAccount(Account senderAccount) {
+		this.senderAccount = senderAccount;
+	}
+	
+	public Account getSenderAccount() {
+		return senderAccount;
+	}
 
 	@Override
 	public String toString() {
