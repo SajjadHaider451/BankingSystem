@@ -1,8 +1,8 @@
 package com.example.BankingSystem.transaction;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +51,7 @@ public class TransactionController {
      * }
      */
 	@PostMapping("/deposit")
-	public ResponseEntity<TransactionResponse> deposit(@RequestBody DepositRequest request){
+	public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest request){
 		
 		/*
          * Call service layer
@@ -83,7 +83,7 @@ public class TransactionController {
      */
 	
 	@PostMapping("/withdraw")
-	public ResponseEntity<TransactionResponse> withdraw(@RequestBody WithdrawRequest request){
+	public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody WithdrawRequest request){
 		
 		/*
          * Call service layer
@@ -114,7 +114,7 @@ public class TransactionController {
      * }
      */
 	@PostMapping("/transfer")
-	public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest request){
+	public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest request){
 		
 		/*
          * Call service layer

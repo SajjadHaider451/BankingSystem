@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.BankingSystem.exception.AccountNotFoundException;
+import com.example.BankingSystem.exception.UserNotFoundException;
 import com.example.BankingSystem.user.UserRepository;
 import com.example.BankingSystem.user.Users;
-import com.example.BankingSystem.common.exception.AccountNotFoundException;
-import com.example.BankingSystem.common.exception.UserNotFoundException;
 
 /**
  * Service class containing the business logic for bank account operations, 

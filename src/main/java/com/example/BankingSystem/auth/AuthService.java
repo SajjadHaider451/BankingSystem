@@ -1,6 +1,7 @@
 package com.example.BankingSystem.auth;
 
 import com.example.BankingSystem.user.Users;
+import com.example.BankingSystem.security.*;
 import com.example.BankingSystem.user.UserRepository;
 
 import java.time.LocalDateTime;
@@ -16,11 +17,13 @@ public class AuthService {
 	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtService jwtService;
 	
 	
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.jwtService = jwtService;
 	}
 	
 	public AuthResponse login(LoginRequest request) {
@@ -53,7 +56,10 @@ public class AuthService {
 	    /*
 	     * Login successful
 	     */
-	    return new AuthResponse("Login successful");
+	    String token =
+	            jwtService.generateToken(user.getEmail());
+
+	    return new AuthResponse(token);
 	}
 	
 	public AuthResponse register(RegisterRequest request) {
@@ -87,7 +93,7 @@ public class AuthService {
 	    /*
 	     * Default role
 	     */
-	    user.setRole("CUSTOMER");
+	    user.setRole("ROLE_USER");
 
 	    /*
 	     * Set creation timestamp

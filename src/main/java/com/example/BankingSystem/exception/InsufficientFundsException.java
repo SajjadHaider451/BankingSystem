@@ -1,4 +1,4 @@
-package com.example.BankingSystem.common.exception;
+package com.example.BankingSystem.exception;
 
 /**
  * Exception thrown when an account does not have enough balance to complete a transaction.

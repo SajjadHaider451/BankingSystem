@@ -3,8 +3,8 @@ package com.example.BankingSystem.transaction;
 
 import com.example.BankingSystem.account.Account;
 import com.example.BankingSystem.account.AccountRepository;
-import com.example.BankingSystem.common.exception.AccountNotFoundException;
-import com.example.BankingSystem.common.exception.InsufficientFundsException;
+import com.example.BankingSystem.exception.AccountNotFoundException;
+import com.example.BankingSystem.exception.InsufficientFundsException;
 
 import jakarta.transaction.Transactional;
 

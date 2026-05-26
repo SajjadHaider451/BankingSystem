@@ -11,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * JPA entity representing a user in the banking system.
@@ -22,9 +25,13 @@ public class Users {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank
 	private String username;
 	@Column(unique = true)
+	@NotBlank(message = "Email is required")
+	@Email(message = "Email should be valid")
 	private String email;
+	@Size(min = 6, message = "Password must be at least 6 characters")
 	private String password;
 	private String role;
 	private LocalDateTime createdAt;

@@ -1,4 +1,4 @@
-package com.example.BankingSystem.common.exception;
+package com.example.BankingSystem.exception;
 
 /**
  * Exception thrown when a requested bank account cannot be found in the system.

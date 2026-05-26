@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 
 /**
  * JPA entity representing a financial transaction involving one or two bank accounts.
@@ -22,6 +23,7 @@ public class Transaction {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Positive
 	private BigDecimal amount;
 	private String transactionType;
 	private LocalDateTime timestamp;
