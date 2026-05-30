@@ -13,12 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 
 /**
  * REST controller for handling bank account management operations, such as creating accounts and retrieving account information.
  * Receives request from user and forwards to accountservice.
  */
+
+@Tag(
+        name = "Accounts",
+        description = "Bank account management operations"
+)
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {

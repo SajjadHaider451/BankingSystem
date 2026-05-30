@@ -3,6 +3,7 @@ package com.example.BankingSystem.transaction;
 
 import com.example.BankingSystem.account.Account;
 import com.example.BankingSystem.account.AccountRepository;
+import com.example.BankingSystem.account.AccountService;
 import com.example.BankingSystem.exception.AccountNotFoundException;
 import com.example.BankingSystem.exception.InsufficientFundsException;
 
@@ -22,12 +23,15 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     public TransactionService(TransactionRepository transactionRepository,
-                              AccountRepository accountRepository) {
+                              AccountRepository accountRepository, 
+                              AccountService accountService) {
 
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.accountService = accountService;
     }
 
     /*
@@ -47,6 +51,8 @@ public class TransactionService {
             throw new IllegalArgumentException(
                     "Deposit amount must be greater than zero");
         }
+        
+        
 
         /*
          * Find account in database
@@ -54,7 +60,10 @@ public class TransactionService {
         Account account = accountRepository.findById(request.getAccountId())
                 .orElseThrow(() ->
                         new AccountNotFoundException("Account not found"));
-
+        
+        
+        accountService.validateAccountOwnership(account);
+        
         /*
          * Add money to balance
          */
@@ -115,7 +124,9 @@ public class TransactionService {
         Account account = accountRepository.findById(request.getAccountId())
                 .orElseThrow(() ->
                         new AccountNotFoundException("Account not found"));
-
+        
+        accountService.validateAccountOwnership(account);
+        
         /*
          * Check sufficient funds
          */
@@ -187,6 +198,10 @@ public class TransactionService {
                 .orElseThrow(() ->
                         new AccountNotFoundException(
                                 "Sender account not found"));
+        
+        accountService.validateAccountOwnership(sender);
+        
+        
 
         /*
          * Find receiver account

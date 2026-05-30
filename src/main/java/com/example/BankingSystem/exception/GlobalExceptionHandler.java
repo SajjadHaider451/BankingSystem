@@ -135,4 +135,18 @@ public class GlobalExceptionHandler {
                 error,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccess(
+            UnauthorizedAccessException ex) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage());
+
+        return new ResponseEntity<>(
+                error,
+                HttpStatus.FORBIDDEN);
+    }
 }

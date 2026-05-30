@@ -7,8 +7,11 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.BankingSystem.exception.AccountNotFoundException;
+import com.example.BankingSystem.exception.UnauthorizedAccessException;
 import com.example.BankingSystem.exception.UserNotFoundException;
 import com.example.BankingSystem.user.UserRepository;
 import com.example.BankingSystem.user.Users;
@@ -57,7 +60,9 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() ->
                         new AccountNotFoundException("Account not found"));
-
+        
+        validateAccountOwnership(account); 
+        
         return mapToResponse(account);
     }
 
@@ -87,5 +92,45 @@ public class AccountService {
                 account.getCreatedAt(),
                 account.getUser().getId()
         );
+    }
+    
+    public void validateAccountOwnership(Account account) {
+    	
+    	// retrieves the user that JWT authenticated
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+        
+        // gets email from jwt
+        String loggedInEmail =
+                authentication.getName();
+        
+        // gets owner of account from database
+        String accountOwnerEmail =
+                account.getUser().getEmail();
+
+        /*
+         * Admins bypass ownership checks
+         */
+        boolean isAdmin =
+                authentication.getAuthorities()
+                        .stream()
+                        .anyMatch(a ->
+                                a.getAuthority()
+                                        .equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return;
+        }
+
+        /*
+         * User must own account
+         */
+        if (!loggedInEmail.equals(accountOwnerEmail)) {
+
+            throw new UnauthorizedAccessException(
+                    "You do not have access to this account");
+        }
     }
 }
