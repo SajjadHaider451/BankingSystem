@@ -1,19 +1,22 @@
 package com.example.BankingSystem.transaction;
 
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.BankingSystem.account.Account;
 import com.example.BankingSystem.account.AccountRepository;
 import com.example.BankingSystem.account.AccountService;
+import com.example.BankingSystem.account.AccountStatus;
+import com.example.BankingSystem.audit.AuditLogService;
+import com.example.BankingSystem.exception.AccountFrozenException;
 import com.example.BankingSystem.exception.AccountNotFoundException;
 import com.example.BankingSystem.exception.InsufficientFundsException;
 
 import jakarta.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Service class containing the business logic for financial transactions, including deposits, withdrawals, and transfers between bank accounts.
@@ -24,14 +27,17 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
+    private final AuditLogService auditLogService;
 
     public TransactionService(TransactionRepository transactionRepository,
                               AccountRepository accountRepository, 
-                              AccountService accountService) {
+                              AccountService accountService,
+                              AuditLogService auditLogService) {
 
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.accountService = accountService;
+        this.auditLogService = auditLogService;
     }
 
     /*
@@ -94,7 +100,16 @@ public class TransactionService {
          */
         Transaction savedTransaction =
                 transactionRepository.save(transaction);
-
+        
+        auditLogService.log(
+                "DEPOSIT",
+                account.getUser().getEmail(),
+                "Deposited $"
+                        + request.getAmount()
+                        + " into account "
+                        + account.getAccountNumber()
+        );
+        
         /*
          * Return DTO response
          */
@@ -126,6 +141,7 @@ public class TransactionService {
                         new AccountNotFoundException("Account not found"));
         
         accountService.validateAccountOwnership(account);
+        validateAccountStatus(account);
         
         /*
          * Check sufficient funds
@@ -166,7 +182,16 @@ public class TransactionService {
          */
         Transaction savedTransaction =
                 transactionRepository.save(transaction);
-
+        
+        auditLogService.log(
+                "WITHDRAW",
+                account.getUser().getEmail(),
+                "Withdrew $"
+                        + request.getAmount()
+                        + " from account "
+                        + account.getAccountNumber()
+        );
+        
         /*
          * Return DTO response
          */
@@ -200,6 +225,7 @@ public class TransactionService {
                                 "Sender account not found"));
         
         accountService.validateAccountOwnership(sender);
+        validateAccountStatus(sender);
         
         
 
@@ -257,7 +283,18 @@ public class TransactionService {
          */
         Transaction savedTransaction =
                 transactionRepository.save(transaction);
-
+        
+        auditLogService.log(
+                "TRANSFER",
+                sender.getUser().getEmail(),
+                "Transferred $"
+                        + request.getAmount()
+                        + " from account "
+                        + sender.getAccountNumber()
+                        + " to account "
+                        + receiver.getAccountNumber()
+        );
+        
         /*
          * Return response DTO
          */
@@ -318,5 +355,23 @@ public class TransactionService {
                         ? transaction.getReceiverAccount().getId()
                         : null
         );
+    }
+    
+    private void validateAccountStatus(
+            Account account) {
+
+        if (account.getStatus()
+                == AccountStatus.FROZEN) {
+
+            throw new AccountFrozenException(
+                    "Account is frozen");
+        }
+
+        if (account.getStatus()
+                == AccountStatus.CLOSED) {
+
+            throw new AccountFrozenException(
+                    "Account is closed");
+        }
     }
 }

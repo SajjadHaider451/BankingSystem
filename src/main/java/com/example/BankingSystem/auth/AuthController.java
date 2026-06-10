@@ -4,6 +4,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.BankingSystem.audit.AuditLogService;
+import com.example.BankingSystem.user.Users;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -19,10 +23,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AuthController {
 
     private final AuthService authService;
+    
 
     public AuthController(AuthService authService) {
 
         this.authService = authService;
+        
     }
 
     /*
@@ -38,7 +44,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
-
+        
+      
         return new ResponseEntity<>(
                 response,
                 HttpStatus.CREATED);
@@ -58,7 +65,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
 
         AuthResponse response = authService.login(request);
-
+       
         return ResponseEntity.ok(response);
     }
     

@@ -12,15 +12,13 @@ This is a Java-based Banking System application built using Spring Boot. It prov
 - **MySQL Database**
 - **Maven** (via `mvnw`)
 
-## Building and Running
-The project uses the Maven Wrapper.
+## Docker
+The project supports containerization using Docker and Docker Compose.
 
-- **Build the project:**
-  `./mvnw clean package`
-- **Run the application:**
-  `./mvnw spring-boot:run`
-- **Run tests:**
-  `./mvnw test`
+- **Run with Docker Compose:**
+  `docker-compose up --build`
+- **Stop the application:**
+  `docker-compose down`
 
 ## Development Conventions
 - **Project Structure:** Standard Spring Boot layered architecture (`controller`, `service`, `repo`, `entity`, `dto`, `security`, `exception`).

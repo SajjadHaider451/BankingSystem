@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.example.BankingSystem.audit.AuditLogService;
 import com.example.BankingSystem.exception.AccountNotFoundException;
 import com.example.BankingSystem.exception.UnauthorizedAccessException;
 import com.example.BankingSystem.exception.UserNotFoundException;
@@ -27,12 +28,15 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final AuditLogService auditLogService;
 
     public AccountService(AccountRepository accountRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          AuditLogService auditLogService) {
 
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.auditLogService = auditLogService;
     }
 
     public AccountResponse createAccount(Long userId,
@@ -51,6 +55,14 @@ public class AccountService {
         account.setUser(user);
 
         Account savedAccount = accountRepository.save(account);
+        auditLogService.log(
+                "ACCOUNT_CREATED",
+                user.getEmail(),
+                "Created account "
+                        + account.getAccountNumber()
+        );
+        
+        account.setStatus(AccountStatus.ACTIVE);
 
         return mapToResponse(savedAccount);
     }
@@ -90,7 +102,9 @@ public class AccountService {
                 account.getBalance(),
                 account.getAccountType(),
                 account.getCreatedAt(),
-                account.getUser().getId()
+                account.getUser().getId(),
+                account.getStatus().name()
+                
         );
     }
     

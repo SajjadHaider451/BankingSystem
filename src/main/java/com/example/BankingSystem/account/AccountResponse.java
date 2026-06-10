@@ -12,6 +12,7 @@ public class AccountResponse {
     private String accountType;
     private LocalDateTime createdAt;
     private Long userId;
+    private String status;
 
     public AccountResponse() {
     }
@@ -21,7 +22,8 @@ public class AccountResponse {
                            BigDecimal balance,
                            String accountType,
                            LocalDateTime createdAt,
-                           Long userId) {
+                           Long userId,
+                           String status) {
 
         this.id = id;
         this.accountNumber = accountNumber;
@@ -29,6 +31,7 @@ public class AccountResponse {
         this.accountType = accountType;
         this.createdAt = createdAt;
         this.userId = userId;
+        this.status = status;
     }
 
     public Long getId() {
@@ -77,5 +80,13 @@ public class AccountResponse {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    
+    public String getStatus() {
+    	return status;
+    }
+    
+    public void setStatus(String status) {
+    	this.status = status;
     }
 }

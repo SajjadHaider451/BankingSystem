@@ -40,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
                 .password(user.getPassword())
 
-                .roles("ROLE_USERS")
+                .roles("USER")
 
                 .build();
     }

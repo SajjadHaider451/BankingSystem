@@ -1,6 +1,7 @@
 package com.example.BankingSystem.auth;
 
 import com.example.BankingSystem.user.Users;
+import com.example.BankingSystem.audit.AuditLogService;
 import com.example.BankingSystem.security.*;
 import com.example.BankingSystem.user.UserRepository;
 
@@ -18,12 +19,13 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
+	private final AuditLogService auditLogService;
 	
-	
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuditLogService auditLogService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtService = jwtService;
+		this.auditLogService = auditLogService;
 	}
 	
 	public AuthResponse login(LoginRequest request) {
@@ -31,10 +33,15 @@ public class AuthService {
 	    /*
 	     * Find user by email
 	     */
-	    Users user = userRepository.findByEmail(request.getEmail())
-	            .orElseThrow(() ->
-	                    new RuntimeException(
-	                            "Invalid email or password"));
+		Users user = userRepository.findByEmail(request.getEmail())
+		        .orElseThrow(() -> {
+		            auditLogService.log(
+		                    "LOGIN_FAILED",
+		                    request.getEmail(),
+		                    "Invalid login attempt"
+		            );
+		            return new RuntimeException("Invalid email or password");
+		        });
 
 	    /*
 	     * Check password
@@ -58,7 +65,13 @@ public class AuthService {
 	     */
 	    String token =
 	            jwtService.generateToken(user.getEmail());
-
+	    
+	    auditLogService.log(
+	            "LOGIN",
+	            user.getEmail(),
+	            "User login"
+	    );
+	    
 	    return new AuthResponse(token);
 	}
 	
@@ -89,6 +102,12 @@ public class AuthService {
 	    user.setPassword(
 	            passwordEncoder.encode(
 	                    request.getPassword()));
+	    
+	    auditLogService.log(
+	            "REGISTER",
+	            user.getEmail(),
+	            "User account registered"
+	    );
 
 	    /*
 	     * Default role

@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +27,8 @@ public class Account {
 	private int accountNumber;
 	private BigDecimal balance;
 	private String accountType;
+	@Enumerated(EnumType.STRING)
+	private AccountStatus status;
 	private LocalDateTime createdAt;
 	
 	@ManyToOne
@@ -70,6 +74,13 @@ public class Account {
 	    this.user = user;
 	}
 	
+	public AccountStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(AccountStatus status) {
+		this.status = status;
+	}
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", accountNumber=" + accountNumber + ", balance=" + balance + ", accountType="

@@ -149,4 +149,20 @@ public class GlobalExceptionHandler {
                 error,
                 HttpStatus.FORBIDDEN);
     }
+    
+    @ExceptionHandler(AccountFrozenException.class)
+    public ResponseEntity<ErrorResponse>
+    handleFrozenAccount(
+            AccountFrozenException ex) {
+
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.FORBIDDEN.value(),
+                        ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(error);
+    }
 }
