@@ -316,11 +316,3 @@ Potential improvements include:
 * Cloud Deployment (AWS)
 
 ---
-
-## Author
-
-Sajjad Haider
-
-Computer Science Student | Java Backend Developer
-
-Built as a portfolio project to strengthen enterprise Java and Spring Boot development skills.
